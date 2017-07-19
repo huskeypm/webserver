@@ -17,6 +17,13 @@ def doit(allargs):
   
   print pdb, param, out 
 
+ 
+  f = open(out, 'w')
+  f.write("hello world " + pdb + " " + param)
+  f.close()
+
+ 
+
 
 #
 # Message printed when program run without arguments 
