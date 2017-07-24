@@ -62,7 +62,7 @@ def Runner(outFileName="test.txt"):
   solve(a == L, u, bc)
   
   # Save solution in VTK format
-  pvdName = "poisson.pvd"
+  pvdName = "/tmp/poisson.pvd"
   file = File(pvdName)
   file << u
 

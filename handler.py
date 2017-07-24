@@ -13,10 +13,15 @@ import sys
 def doit(allargs): 
   # ignoring args. 
 
+  # First test - can we import code from a user-directory 
   import sys
-  sys.path.append("/home/AD/pmke226/sources/webserver")  
+  sys.path.append("/home/AD/pmke226/sources/homogmwe")  
+  import homoglight
+  homoglight.test()
+  
+  # Second - can we run a local code, stick the data somewhere? 
   import demo_poisson
-  demo_poisson.Runner(outFileName="test.txt")
+  demo_poisson.Runner(outFileName="/tmp/test.txt")
 
 
 def doitOld(allargs): 
