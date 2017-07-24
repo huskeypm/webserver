@@ -16,7 +16,7 @@ def doit(allargs):
   import sys
   sys.path.append("/home/AD/pmke226/sources/webserver")  
   import demo_poisson
-  demo_poisson.doit()
+  demo_poisson.Runner(outFileName="test.txt")
 
 
 def doitOld(allargs): 
@@ -44,7 +44,7 @@ Purpose:
  
 Usage:
 """
-  msg+="  %s -validation" % (scriptName)
+  msg+="  %s -run " % (scriptName)
   msg+="""
   
  
