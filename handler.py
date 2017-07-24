@@ -11,6 +11,15 @@ import sys
 # ROUTINE  
 #
 def doit(allargs): 
+  # ignoring args. 
+
+  import sys
+  sys.path.append("/home/AD/pmke226/sources/webserver")  
+  import demo_poisson
+  demo_poisson.doit()
+
+
+def doitOld(allargs): 
   pdb = allargs[1]
   param= allargs[2]
   out = allargs[3]
@@ -61,11 +70,11 @@ if __name__ == "__main__":
   #  #print "arg"
 
   # Loops over each argument in the command line 
-  for i,arg in enumerate(sys.argv):
-    # calls 'doit' with the next argument following the argument '-validation'
-    if(arg=="-validation"):
-      arg1=sys.argv[i+1] 
-      doit(arg1)
+  #for i,arg in enumerate(sys.argv):
+  #  # calls 'doit' with the next argument following the argument '-validation'
+  #  if(arg=="-validation"):
+  #    arg1=sys.argv[i+1] 
+  #    doit(arg1)
   
 
 
