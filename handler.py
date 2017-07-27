@@ -10,18 +10,47 @@ import sys
 #
 # ROUTINE  
 #
+repo = "/opt/pkh/"
 def doit(allargs): 
   # ignoring args. 
+  data = allargs[1]
+  paramFile = allargs[2]
+  outFileName = allargs[3]
 
+   
+  ### Doesn't work, std logic error 
   # First test - can we import code from a user-directory 
-  import sys
-  sys.path.append("/home/AD/pmke226/sources/homogmwe")  
-  import homoglight
-  homoglight.test()
+  # test() prints to stdout 
+  if 0: 
+    import sys
+    sys.path.append(repo + "homogenizationmwe/")
+    import homoglight
+    homoglight.test()
   
+  ### Doesn't work, std logic error 
   # Second - can we run a local code, stick the data somewhere? 
-  import demo_poisson
-  demo_poisson.Runner(outFileName="/tmp/test.txt")
+  # Runner() performs a fenics calculation that creates output files/temporary files 
+  if 0: 
+    import demo_poisson
+    demo_poisson.Runner(outFileName=outFileName)                 
+
+  # WORKS test on meddling with files
+  dazip =   outFileName + ".zip"
+  if 0: 
+    datouch=   outFileName + ".txt"
+    import os
+    # manipulate file in a scratch directory 
+    os.system('echo \"sadf\" > /tmp/x') 
+    # create a zip file that is stored in 'protected' directory 
+    os.system('zip %s /tmp/x '%dazip)           
+    os.system('echo \"sadf\" > %s'%datouch)
+
+  # 
+  f = open(outFileName, 'w')
+  f.write("hello world " + data+ " " + paramFile + " " + outFileName)
+  f.write("\n"+dazip) 
+  f.close()
+
 
 
 def doitOld(allargs): 
@@ -85,6 +114,7 @@ if __name__ == "__main__":
 
 
 
+  #doitOld(sys.argv)
   doit(sys.argv)
   #raise RuntimeError("Arguments not understood")
 
