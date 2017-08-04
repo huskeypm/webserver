@@ -24,6 +24,7 @@ def RunTest(pdbFile=None,paramFile=None,outFileName=None):
   if 1: 
     print "Attempting to load dolfin libs"
     from dolfin import *
+  
 
   # for debugging 
   if pdbFile==None:
@@ -47,6 +48,12 @@ def RunTest(pdbFile=None,paramFile=None,outFileName=None):
   f.write("hello world " + pdbFile+ " " + paramFile + " " + outFileName)
   f.write("\n"+dazip) 
   f.close()
+
+def RunODE(outFileName):
+  # scipy test 
+  import demo_ode
+  demo_ode.RunODE()
+  print "Will write to", outFileName
 
 def RunHomogMWE():
   ### Doesn't work, std logic error 
@@ -114,6 +121,9 @@ if __name__ == "__main__":
       RunPoissonDemo(
            outFileName="/tmp/dummy"
       )
+      sys.exit()
+    if(arg=="-ode"):
+      RunODE(outFileName=sys.argv[i+1]) 
       sys.exit()
   
 
