@@ -21,9 +21,9 @@ def doit(allargs):
 def RunTest(pdbFile=None,paramFile=None,outFileName=None):
 
   # RunTest if I can import fenics
-  if 1: 
-    print "Attempting to load dolfin libs"
-    from dolfin import *
+  #if 1: 
+  #  print "Attempting to load dolfin libs"
+  #  from dolfin import *
   
 
   # for debugging 
@@ -98,6 +98,7 @@ Notes:
 #
 if __name__ == "__main__":
   import sys
+  import os
   msg = helpmsg()
   remap = "none"
 
