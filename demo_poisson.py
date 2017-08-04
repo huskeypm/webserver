@@ -62,14 +62,28 @@ def Runner(outFileName="test.txt"):
   solve(a == L, u, bc)
   
   # Save solution in VTK format
-  pvdName = "/tmp/poisson.pvd"
+  #pvdName = "/tmp/poisson.pvd"
+  root = "/var/www/protected/webformzmR9pN"
+  fenicsOuts = root + "_fenics"
+  pvdName = fenicsOuts+ ".pvd"
   file = File(pvdName)
   file << u
 
-  # Wreite 
-  f = open(outFileName, 'w')
-  f.write("%s has been written. How do we download it?"%pvdName) 
+
+  # Write outputs 
+  outputDataName = fenicsOuts+".txt"
+  f = open(outputDataName, 'w')
+  f.write("%s has been written"%pvdName) 
+  f.write("2+2=%f "%(3)) 
   f.close()
+  print "Wrote %s" % outputDataName
+
+  # zip 
+  import os 
+  zipName = root+".tgz"
+  cmd = "tar -zcvf %s %s*"%(zipName,fenicsOuts)
+  print cmd 
+  os.system(cmd)
 
   
   # Plot solution
