@@ -16,6 +16,7 @@ def RunTemplate(allargs):
   outFileName="test.txt"   
   import numpy 
   # open cv stuff 
+  print "HERE"
   
   f = open(outFileName, 'w')
   f.write("hello world " + dataFileName)
