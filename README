@@ -3,3 +3,6 @@ Webserver on athena
 - handler.py delegates routines 
 - it is called from  /var/www/html/sites/all/modules/artsci_chemistry_simulation/artsci_chemistry_simulation.module 
 - it needs to be located in /opt/webserver to work correctly (currently that directory points to a clone of this repo) 
+
+
+see <a href=https://docs.google.com/document/d/13VS_nwQGPpBM_p0k5A6yUF2fqlPJqV36DcRjf7ROkBA/edit?usp=sharing>link</a> for more info 
