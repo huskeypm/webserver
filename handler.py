@@ -118,6 +118,10 @@ if __name__ == "__main__":
            outFileName="/tmp/dummy"
       )
       sys.exit()
+    if(arg=="-template"): 
+      import demo_template
+      demo_template.RunTemplate(sys.argv)
+      quit()
     if(arg=="-poisson"):
       RunPoissonDemo(
            outFileName="/tmp/dummy"
@@ -131,9 +135,7 @@ if __name__ == "__main__":
 
 
 
-  #doitOld(sys.argv)
-  doit(sys.argv)
-  #raise RuntimeError("Arguments not understood")
+  raise RuntimeError("Arguments not understood")
 
 
 
