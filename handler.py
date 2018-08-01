@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import os
 ##################################
 #
 # Revisions
@@ -70,9 +71,17 @@ def RunPoissonDemo(outFileName):
   import demo_poisson
   demo_poisson.Runner(outFileName=outFileName)                 
 
-  
+def RunMatchedMyoYaml(yamlFile):
+  '''
+  Function to run the MatchedMyo algorithm using the yaml functionality
+  '''
+  ### append matchedMyo directory to path so we can import necessary runners
+  sys.path.append(os.getcwd()+'/matchedMyo')
 
+  ### import matched filtering machinery
+  import matchedMyo as mm 
 
+  mm.updatedSimpleYaml(yamlFile)
 
 #
 # Message printed when program run without arguments 
@@ -130,10 +139,11 @@ if __name__ == "__main__":
     if(arg=="-ode"):
       RunODE(outFileName=sys.argv[i+1]) 
       sys.exit()
-  
 
-
-
+    if(arg=="-matchedMyoYaml"):
+      yamlFile = sys.argv[i+1]
+      RunMatchedMyoYaml(yamlFile)
+      sys.exit()
 
   raise RuntimeError("Arguments not understood")
 
