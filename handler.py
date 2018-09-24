@@ -147,10 +147,10 @@ if __name__ == "__main__":
     if(arg=="-matchedMyoYaml"):
       yamlFile = sys.argv[i+1]
       outFileName = sys.argv[i+2]
-      try:
-        imgFileName = sys.argv[i+3]
-      except:
-        imgFileName = None
+      #try:
+      imgFileName = sys.argv[i+3]
+      #except:
+      #  imgFileName = None
       try:
         maskFileName = sys.argv[i+4]
       except:
