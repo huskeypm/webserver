@@ -71,17 +71,21 @@ def RunPoissonDemo(outFileName):
   import demo_poisson
   demo_poisson.Runner(outFileName=outFileName)                 
 
-def RunMatchedMyoYaml(yamlFile):
+def RunMatchedMyoYaml(yamlFile,outFileName,imgFileName,maskFileName):
   '''
   Function to run the MatchedMyo algorithm using the yaml functionality
   '''
-  ### append matchedMyo directory to path so we can import necessary runners
-  sys.path.append(os.getcwd()+'/matchedMyo')
+  ### Use non-interactive backend for matplotlib
+  import matplotlib
+  matplotlib.use('Agg')
+
+  ### append matchedmyo directory to path so we can import necessary runners
+  sys.path.append('/opt/webserver/matchedmyo')
 
   ### import matched filtering machinery
-  import matchedMyo as mm 
+  import detect 
 
-  mm.updatedSimpleYaml(yamlFile)
+  detect.updatedSimpleYaml(yamlFile,outFileName,imgFileName,maskFileName)
 
 #
 # Message printed when program run without arguments 
@@ -142,7 +146,16 @@ if __name__ == "__main__":
 
     if(arg=="-matchedMyoYaml"):
       yamlFile = sys.argv[i+1]
-      RunMatchedMyoYaml(yamlFile)
+      outFileName = sys.argv[i+2]
+      try:
+        imgFileName = sys.argv[i+3]
+      except:
+        imgFileName = None
+      try:
+        maskFileName = sys.argv[i+4]
+      except:
+        maskFileName = None
+      RunMatchedMyoYaml(yamlFile,outFileName,imgFileName,maskFileName)
       sys.exit()
 
   raise RuntimeError("Arguments not understood")
