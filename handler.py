@@ -84,8 +84,14 @@ def RunMatchedMyoYaml(yamlFile,outFileName,imgFileName,maskFileName):
 
   ### import matched filtering machinery
   import detect 
+  import yaml
 
-  detect.updatedSimpleYaml(yamlFile,outFileName,imgFileName,maskFileName)
+  with open(yamlFile) as fp:
+    data = yaml.load(fp)
+  if data['analysisType'] == 'simple':
+    detect.updatedSimpleYaml(yamlFile,outFileName,imgFileName,maskFileName)
+  elif data['analysisType'] == 'full':
+    detect.fullAnalysis(yamlFile,outFileName,imgFileName,maskFileName)
 
 #
 # Message printed when program run without arguments 
