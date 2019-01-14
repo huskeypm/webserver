@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os
+import numpy as np
 ##################################
 #
 # Revisions
@@ -12,6 +13,9 @@ import os
 # ROUTINE  
 #
 repo = "/opt/pkh/"
+thisFileRoot = '/'.join(os.path.realpath(__file__).split('/')[:-1])
+
+
 def doit(allargs): 
   # ignoring args. 
   pdbFile= allargs[1]
@@ -78,20 +82,71 @@ def RunMatchedMyoYaml(yamlFile,outFileName,imgFileName,maskFileName):
   ### Use non-interactive backend for matplotlib
   import matplotlib
   matplotlib.use('Agg')
+  import matplotlib.pyplot as plt
 
   ### append matchedmyo directory to path so we can import necessary runners
   sys.path.append('/opt/webserver/matchedmyo')
 
   ### import matched filtering machinery
-  import detect 
+  #import detect
+  import matchedmyo as mm
   import yaml
+  import util
 
-  with open(yamlFile) as fp:
-    data = yaml.load(fp)
-  if data['analysisType'] == 'simple':
-    detect.updatedSimpleYaml(yamlFile,outFileName,imgFileName,maskFileName)
-  elif data['analysisType'] == 'full':
-    detect.fullAnalysis(yamlFile,outFileName,imgFileName,maskFileName)
+  ### Form the inputs for the classification
+  inputs = mm.Inputs(
+    imageName = imgFileName,
+    maskName = maskFileName,
+    preprocess = False
+  )
+  inputs.setupImages()
+  if yamlFile == None: # use default yaml file if not specified
+    yamlFile = '/opt/webserver/matchedmyo/YAML_files/webserver_default.yml'
+  inputs.yamlFileName = yamlFile
+  inputs.load_yaml()
+  ## Check if classification type is specified as normal or arbitrary
+  try:
+    self.classificationType = self.yamlDict['classificationType']
+  except:
+    pass
+  ## Specify webserver specific parameters
+  if 'outputParams' in inputs.yamlDict.keys():
+    ## opting to save the outputs manually after the job is run instead of using previous routines
+    inputs.yamlDict['outputParams']['fileRoot'] = None
+    inputs.yamlDict['outputParams']['fileType'] = None
+    inputs.yamlDict['outputParams']['saveHitsArray'] = False
+    inputs.yamlDict['outputParams']['csvFile'] = None
+  initialPreprocessValue = inputs.yamlDict['preprocess']
+  inputs.yamlDict['preprocess'] = False
+  inputs.setupDefaultParamDicts()
+  inputs.updateDefaultDict()
+  inputs.updateParamDicts()
+
+  if initialPreprocessValue:
+    inputs.imgOrig = util.lightlyPreprocess(
+      inputs.imgOrig,
+      inputs.dic['filterTwoSarcomereSize'],
+    )
+    # 0.8 value here is to kill the brightness a bit
+    eightBitImage = inputs.imgOrig.astype(np.float32) /np.max(inputs.imgOrig) * 255. * 0.8
+    eightBitImage = eightBitImage.astype(np.uint8)
+    inputs.colorImage = np.dstack((eightBitImage,eightBitImage,eightBitImage))
+
+  if inputs.classificationType == 'myocyte':
+    myResults = mm.giveMarkedMyocyte(inputs = inputs)
+  elif inputs.classificationType == 'arbitrary':
+    myResults = mm.arbitraryFiltering(inputs = inputs)
+  else:
+    raise RuntimeError("Classification Type (specified as classificationType: <type> in YAML file)"
+                       +" not understood. Check to see that spelling is correct.")
+
+  ### Create figure for outputs and save
+  f, ax = plt.subplots(2,1)
+  ax[0].imshow(util.switchBRChannels(myResults.markedImage))
+  ax[0].set_title('Classified Image')
+  ax[1].imshow(util.switchBRChannels(myResults.markedAngles))
+  ax[1].set_title('Angle Analysis of Image')
+  plt.gcf().savefig(outFileName,dpi=inputs.dic['outputParams']['dpi'])
 
 #
 # Message printed when program run without arguments 
@@ -151,15 +206,25 @@ if __name__ == "__main__":
       sys.exit()
 
     if(arg=="-matchedMyoYaml"):
-      yamlFile = sys.argv[i+1]
+      imgFileName = sys.argv[i+1]
       outFileName = sys.argv[i+2]
-      #try:
-      imgFileName = sys.argv[i+3]
-      #except:
-      #  imgFileName = None
       try:
-        maskFileName = sys.argv[i+4]
+        # check if there is a second argument
+        secondArg = str(sys.argv[i+3])
+        if secondArg[-4:] == '.yml':
+          yamlFile = secondArg
+          maskFileName = None
+        else:
+          maskFileName = secondArg
       except:
+        secondArg = None
+      if isinstance(secondArg, str):
+        try:
+          maskFileName = sys.argv[i+4]
+        except:
+          maskFileName = None
+      else:
+        yamlFile = None
         maskFileName = None
       RunMatchedMyoYaml(yamlFile,outFileName,imgFileName,maskFileName)
       sys.exit()
