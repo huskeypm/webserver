@@ -206,6 +206,7 @@ if __name__ == "__main__":
       sys.exit()
 
     if(arg=="-matchedMyoYaml"):
+      print sys.argv
       imgFileName = sys.argv[i+1]
       outFileName = sys.argv[i+2]
       try:
@@ -216,6 +217,7 @@ if __name__ == "__main__":
           maskFileName = None
         else:
           maskFileName = secondArg
+          yamlFile = None
       except:
         secondArg = None
       if isinstance(secondArg, str):
